@@ -77,7 +77,6 @@ dialog::backdrop{background:#0008}
     <label>หน่วย<select id="fUnit"><option value="">ทุกหน่วย</option></select></label>
     <label>ตั้งแต่วันที่<input type="date" id="fFrom"></label>
     <label>ถึงวันที่<input type="date" id="fTo"></label>
-    <button class="ghost" id="reloadBtn">โหลดใหม่</button>
   </div>
   <div class="tw"><table>
     <thead><tr><th>วันที่</th><th>หน่วย</th><th>จุดสกัด / สถานที่</th><th class="n">กำลังพล</th><th class="n">ตรวจบุคคล</th><th class="n">ตรวจรถ</th><th class="n">จับกุม</th><th></th></tr></thead>
@@ -124,7 +123,7 @@ dialog::backdrop{background:#0008}
 
 <script>
 // ★ ใส่ URL ของ Web app (/exec) ที่ Deploy จาก code.gs
-const API_URL = 'https://script.google.com/macros/s/AKfycbxCT6g3e4b20QHXjCnmSDELeuH6WosTj66cHtawQE86WEO4fFMcB5WRVMb-w-m_0-Vn/exec';
+const API_URL = 'PUT_YOUR_APPS_SCRIPT_EXEC_URL_HERE';
 
 const $ = s => document.querySelector(s);
 const NUM = ['กำลังพล','ตรวจบุคคล','ตรวจรถยนต์','ตรวจรถจักรยานยนต์','จับกุมคดีอาญา'];
@@ -188,7 +187,6 @@ function render(){
   $('#foot').innerHTML = rs.length ? `<tr><td colspan="3">รวม ${rs.length} รายงาน</td><td class="n">${s('กำลังพล')}</td><td class="n">${s('ตรวจบุคคล')}</td><td class="n">${s('ตรวจรถยนต์')+s('ตรวจรถจักรยานยนต์')}</td><td class="n">${s('จับกุมคดีอาญา')}</td><td></td></tr>` : '';
 }
 ['#fUnit','#fFrom','#fTo'].forEach(s => $(s).onchange = render);
-$('#reloadBtn').onclick = load;
 $('#rows').onclick = e => {
   const p = e.target.dataset.p, ed = e.target.dataset.e;
   if(p) printRows(ALL.filter(r=>r.id===p));
