@@ -124,7 +124,7 @@ dialog::backdrop{background:#0008}
 
 <script>
 // ★ ใส่ URL ของ Web app (/exec) ที่ Deploy จาก code.gs
-const API_URL = 'https://script.google.com/macros/s/AKfycbyaBOCseqKBsBHudgQmxpmsBuPtgI2ubxK87Bxh2dQ0aHAXLzV5oEiKqVsr4yV18CjO/exec';
+const API_URL = 'PUT_YOUR_APPS_SCRIPT_EXEC_URL_HERE';
 
 const $ = s => document.querySelector(s);
 const NUM = ['กำลังพล','ตรวจบุคคล','ตรวจรถยนต์','ตรวจรถจักรยานยนต์','จับกุมคดีอาญา'];
@@ -160,8 +160,9 @@ $('#code').onkeydown = e => { if(e.key==='Enter') login(); };
 $('#logoutBtn').onclick = () => { sessionStorage.removeItem('cpcode'); location.reload(); };
 
 async function load(){
-  const j = await get({action:'list'});
-  if(!j.ok){ toast(j.error||'โหลดไม่สำเร็จ'); return; }
+  let j;
+  try{ j = await get({action:'list'}); }catch(e){ j = {ok:false, error:'โหลดข้อมูลไม่ได้ (สคริปต์อาจยังไม่ได้อนุญาตสิทธิ์หรือยังไม่ได้ Deploy ใหม่)'}; }
+  if(!j.ok){ toast(j.error||'โหลดไม่สำเร็จ'); $('#empty').hidden = false; $('#empty').textContent = j.error||'โหลดไม่สำเร็จ'; return; }
   ALL = j.rows.sort((a,b) => (b['วันที่']+b['เวลาเริ่ม']).localeCompare(a['วันที่']+a['เวลาเริ่ม']));
   const cur = $('#fUnit').value;
   const units = [...new Set(ALL.map(r => r['หน่วย']).filter(Boolean))].sort();
