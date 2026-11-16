@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>รายงานผลการปฏิบัติการตั้งจุดสกัด ภ.จว.ปราจีนบุรี</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#14284b;--gold:#b88a1e;--bg:#eceff4;--card:#fff;--line:#cfd6e2;--txt:#1b2333;--red:#b3261e}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Sarabun','TH Sarabun New',sans-serif;background:var(--bg);color:var(--txt);font-size:16px}
+header{background:var(--navy);color:#fff;padding:14px 20px;border-bottom:4px solid var(--gold);display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+header h1{font-size:1.2rem;margin:0;flex:1}
+button{font:inherit;border:0;border-radius:6px;padding:8px 14px;cursor:pointer;background:var(--navy);color:#fff}
+button.gold{background:var(--gold)} button.ghost{background:#fff;color:var(--navy);border:1px solid var(--navy)} button.red{background:var(--red)}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--gold);outline-offset:1px}
+main{max-width:1180px;margin:0 auto;padding:16px}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:end}
+.bar label{display:flex;flex-direction:column;font-size:.85rem;gap:2px}
+input,select,textarea{font:inherit;padding:7px 9px;border:1px solid var(--line);border-radius:6px;background:#fff;width:100%}
+.tw{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;min-width:820px}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:#e1e7f1;font-weight:600} td.n,th.n{text-align:right}
+tfoot td{font-weight:700;background:#f3f5f9}
+td.act{white-space:nowrap}td.act button{padding:4px 9px;font-size:.85rem;margin-right:3px}
+.login{max-width:340px;margin:12vh auto;background:#fff;padding:24px;border-radius:10px;border:1px solid var(--line);border-top:5px solid var(--gold)}
+.login h2{margin:0 0 4px;font-size:1.15rem;color:var(--navy)}
+.err{color:var(--red);min-height:1.3em;margin:6px 0}
+dialog{border:0;border-radius:10px;padding:0;width:min(760px,96vw);max-height:94vh}
+dialog::backdrop{background:#0008}
+.dh{background:var(--navy);color:#fff;padding:12px 16px;font-weight:700}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;padding:16px}
+.grid label{font-size:.85rem;display:flex;flex-direction:column;gap:2px}
+.grid .w{grid-column:1/-1}
+.df{padding:12px 16px;display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--line)}
+.empty{padding:28px;text-align:center;color:#556}
+#toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:9px 18px;border-radius:20px;display:none}
+/* ===== แบบรายงานสำหรับพิมพ์ ===== */
+#print{display:none}
+.pg{width:190mm;margin:0 auto;font-family:'Sarabun','TH Sarabun New',sans-serif;font-size:15pt;line-height:1.45;color:#000}
+.pg h2{text-align:center;font-size:17pt;margin:0 0 2pt}.pg .sub{text-align:center;margin-bottom:10pt}
+.pg table{min-width:0;margin:8pt 0}.pg td,.pg th{border:1px solid #000;padding:4pt 8pt;font-size:14pt}
+.pg th{background:#eee;text-align:center}.pg td.n{text-align:center}
+.pg .kv{display:flex;gap:6pt;margin:2pt 0}.pg .kv b{white-space:nowrap}.pg .kv span{flex:1;border-bottom:1px dotted #000;min-height:1.2em}
+.pg .box{border:1px solid #000;padding:6pt 8pt;min-height:44pt;white-space:pre-wrap;margin:3pt 0 8pt}
+.pg .sign{margin:26pt 0 0 90mm;text-align:center}
+@media print{
+  @page{size:A4;margin:15mm}
+  body{background:#fff}
+  body>*:not(#print){display:none!important}
+  #print{display:block}
+  .pg{page-break-after:always;break-after:page}.pg:last-child{page-break-after:auto}
+}
+</style>
+</head>
+<body>
+
+<section id="loginView" class="login">
+  <h2>รายงานผลการปฏิบัติการตั้งจุดสกัด</h2>
+  <div style="margin-bottom:14px">ภ.จว.ปราจีนบุรี</div>
+  <label for="code">รหัสเข้าใช้งาน</label>
+  <input id="code" type="password" inputmode="numeric" autocomplete="off">
+  <div class="err" id="loginErr"></div>
+  <button id="loginBtn" class="gold" style="width:100%">เข้าสู่ระบบ</button>
+</section>
+
+<div id="app" hidden>
+<header>
+  <h1>รายงานผลการปฏิบัติการตั้งจุดสกัด ภ.จว.ปราจีนบุรี</h1>
+  <button class="gold" id="addBtn">เพิ่มรายงาน</button>
+  <button class="ghost" id="printAllBtn">พิมพ์ทั้งหมดที่แสดง</button>
+  <button class="ghost" id="logoutBtn">ออก</button>
+</header>
+<main>
+  <div class="bar">
+    <label>หน่วย<select id="fUnit"><option value="">ทุกหน่วย</option></select></label>
+    <label>ตั้งแต่วันที่<input type="date" id="fFrom"></label>
+    <label>ถึงวันที่<input type="date" id="fTo"></label>
+    <button class="ghost" id="reloadBtn">โหลดใหม่</button>
+  </div>
+  <div class="tw"><table>
+    <thead><tr><th>วันที่</th><th>หน่วย</th><th>จุดสกัด / สถานที่</th><th class="n">กำลังพล</th><th class="n">ตรวจบุคคล</th><th class="n">ตรวจรถ</th><th class="n">จับกุม</th><th></th></tr></thead>
+    <tbody id="rows"></tbody><tfoot id="foot"></tfoot>
+  </table></div>
+  <div id="empty" class="empty" hidden>ยังไม่มีรายงานในช่วงที่เลือก กด "เพิ่มรายงาน" เพื่อเริ่มบันทึก</div>
+</main>
+</div>
+
+<dialog id="dlg">
+  <div class="dh" id="dlgTitle">เพิ่มรายงาน</div>
+  <div class="grid" id="form">
+    <label>วันที่<input type="date" data-k="วันที่"></label>
+    <label>เวลาเริ่ม<input type="time" data-k="เวลาเริ่ม"></label>
+    <label>เวลาสิ้นสุด<input type="time" data-k="เวลาสิ้นสุด"></label>
+    <label>หน่วย<input list="units" data-k="หน่วย" placeholder="เช่น สภ.เมืองปราจีนบุรี"></label>
+    <label>ชื่อจุดสกัด<input data-k="ชื่อจุดสกัด"></label>
+    <label>สถานที่ / พิกัด<input data-k="สถานที่"></label>
+    <label>ผู้บังคับหน่วย<input data-k="ผู้บังคับหน่วย"></label>
+    <label>กำลังพล (นาย)<input type="number" min="0" data-k="กำลังพล"></label>
+    <label>ตรวจบุคคล (คน)<input type="number" min="0" data-k="ตรวจบุคคล"></label>
+    <label>ตรวจรถยนต์ (คัน)<input type="number" min="0" data-k="ตรวจรถยนต์"></label>
+    <label>ตรวจรถจักรยานยนต์ (คัน)<input type="number" min="0" data-k="ตรวจรถจักรยานยนต์"></label>
+    <label>จับกุมคดีอาญา (ราย)<input type="number" min="0" data-k="จับกุมคดีอาญา"></label>
+    <label>ยาเสพติด<input data-k="ยาเสพติด" placeholder="ชนิด / จำนวน"></label>
+    <label>อาวุธปืน<input data-k="อาวุธปืน" placeholder="ชนิด / จำนวน"></label>
+    <label class="w">ผลการปฏิบัติ<textarea rows="3" data-k="ผลการปฏิบัติ"></textarea></label>
+    <label class="w">ปัญหา / อุปสรรค<textarea rows="2" data-k="ปัญหา/อุปสรรค"></textarea></label>
+    <label class="w">ผู้รายงาน<input data-k="ผู้รายงาน"></label>
+  </div>
+  <div class="err" id="saveErr" style="padding:0 16px"></div>
+  <div class="df">
+    <button class="red" id="delBtn" hidden>ลบ</button><span style="flex:1"></span>
+    <button class="ghost" id="cancelBtn">ยกเลิก</button>
+    <button class="gold" id="saveBtn">บันทึก</button>
+  </div>
+</dialog>
+<datalist id="units">
+  <option value="สภ.เมืองปราจีนบุรี"><option value="สภ.กบินทร์บุรี"><option value="สภ.นาดี">
+  <option value="สภ.บ้านสร้าง"><option value="สภ.ประจันตคาม"><option value="สภ.ศรีมหาโพธิ"><option value="สภ.ศรีมโหสถ">
+</datalist>
+<div id="toast"></div>
+<div id="print"></div>
+
+<script>
+// ★ ใส่ URL ของ Web app (/exec) ที่ Deploy จาก code.gs
+const API_URL = 'PUT_YOUR_APPS_SCRIPT_EXEC_URL_HERE';
+
+const $ = s => document.querySelector(s);
+const NUM = ['กำลังพล','ตรวจบุคคล','ตรวจรถยนต์','ตรวจรถจักรยานยนต์','จับกุมคดีอาญา'];
+let CODE = '', ALL = [], editId = null;
+
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const MONTHS = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+function thDate(d){ if(!d) return ''; const [y,m,dd]=String(d).split('-').map(Number); return `${dd} ${MONTHS[m-1]} ${y+543}`; }
+function toast(t){ const e=$('#toast'); e.textContent=t; e.style.display='block'; setTimeout(()=>e.style.display='none',2200); }
+
+async function get(params){
+  const r = await fetch(API_URL + '?' + new URLSearchParams({...params, code: CODE}));
+  return r.json();
+}
+async function post(body){
+  const r = await fetch(API_URL, { method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify({...body, code: CODE}) });
+  return r.json();
+}
+
+async function login(){
+  $('#loginErr').textContent = '';
+  CODE = $('#code').value.trim();
+  try{
+    const j = await get({action:'login'});
+    if(!j.ok){ $('#loginErr').textContent = j.error || 'รหัสไม่ถูกต้อง'; return; }
+    sessionStorage.setItem('cpcode', CODE);
+    $('#loginView').hidden = true; $('#app').hidden = false;
+    load();
+  }catch(e){ $('#loginErr').textContent = 'เชื่อมต่อไม่ได้ ตรวจสอบ API_URL และการ Deploy'; }
+}
+$('#loginBtn').onclick = login;
+$('#code').onkeydown = e => { if(e.key==='Enter') login(); };
+$('#logoutBtn').onclick = () => { sessionStorage.removeItem('cpcode'); location.reload(); };
+
+async function load(){
+  const j = await get({action:'list'});
+  if(!j.ok){ toast(j.error||'โหลดไม่สำเร็จ'); return; }
+  ALL = j.rows.sort((a,b) => (b['วันที่']+b['เวลาเริ่ม']).localeCompare(a['วันที่']+a['เวลาเริ่ม']));
+  const cur = $('#fUnit').value;
+  const units = [...new Set(ALL.map(r => r['หน่วย']).filter(Boolean))].sort();
+  $('#fUnit').innerHTML = '<option value="">ทุกหน่วย</option>' + units.map(u=>`<option>${esc(u)}</option>`).join('');
+  $('#fUnit').value = units.includes(cur) ? cur : '';
+  render();
+}
+const filtered = () => ALL.filter(r =>
+  (!$('#fUnit').value || r['หน่วย']===$('#fUnit').value) &&
+  (!$('#fFrom').value || r['วันที่']>=$('#fFrom').value) &&
+  (!$('#fTo').value || r['วันที่']<=$('#fTo').value));
+
+function render(){
+  const rs = filtered();
+  $('#empty').hidden = rs.length>0;
+  $('#rows').innerHTML = rs.map(r => `<tr>
+    <td>${thDate(r['วันที่'])}<br><small>${esc(r['เวลาเริ่ม'])}–${esc(r['เวลาสิ้นสุด'])}</small></td>
+    <td>${esc(r['หน่วย'])}</td><td>${esc(r['ชื่อจุดสกัด'])}<br><small>${esc(r['สถานที่'])}</small></td>
+    <td class="n">${+r['กำลังพล']||0}</td><td class="n">${+r['ตรวจบุคคล']||0}</td>
+    <td class="n">${(+r['ตรวจรถยนต์']||0)+(+r['ตรวจรถจักรยานยนต์']||0)}</td><td class="n">${+r['จับกุมคดีอาญา']||0}</td>
+    <td class="act"><button data-p="${r.id}" class="ghost">พิมพ์</button><button data-e="${r.id}">แก้ไข</button></td></tr>`).join('');
+  const s = k => rs.reduce((a,r)=>a+(+r[k]||0),0);
+  $('#foot').innerHTML = rs.length ? `<tr><td colspan="3">รวม ${rs.length} รายงาน</td><td class="n">${s('กำลังพล')}</td><td class="n">${s('ตรวจบุคคล')}</td><td class="n">${s('ตรวจรถยนต์')+s('ตรวจรถจักรยานยนต์')}</td><td class="n">${s('จับกุมคดีอาญา')}</td><td></td></tr>` : '';
+}
+['#fUnit','#fFrom','#fTo'].forEach(s => $(s).onchange = render);
+$('#reloadBtn').onclick = load;
+$('#rows').onclick = e => {
+  const p = e.target.dataset.p, ed = e.target.dataset.e;
+  if(p) printRows(ALL.filter(r=>r.id===p));
+  if(ed) openForm(ALL.find(r=>r.id===ed));
+};
+
+function openForm(r){
+  editId = r ? r.id : null;
+  $('#dlgTitle').textContent = r ? 'แก้ไขรายงาน' : 'เพิ่มรายงาน';
+  document.querySelectorAll('#form [data-k]').forEach(el => el.value = r ? (r[el.dataset.k] ?? '') : (el.dataset.k==='วันที่' ? new Date().toISOString().slice(0,10) : ''));
+  $('#delBtn').hidden = !r; $('#saveErr').textContent = '';
+  $('#dlg').showModal();
+}
+$('#addBtn').onclick = () => openForm(null);
+$('#cancelBtn').onclick = () => $('#dlg').close();
+$('#saveBtn').onclick = async () => {
+  const data = {};
+  document.querySelectorAll('#form [data-k]').forEach(el => data[el.dataset.k] = el.value.trim());
+  if(!data['วันที่'] || !data['หน่วย']){ $('#saveErr').textContent = 'กรุณากรอกวันที่และหน่วย'; return; }
+  $('#saveBtn').disabled = true;
+  try{
+    const j = await post({action:'save', id:editId, data});
+    if(!j.ok){ $('#saveErr').textContent = j.error||'บันทึกไม่สำเร็จ'; return; }
+    $('#dlg').close(); toast('บันทึกแล้ว'); load();
+  }catch(e){ $('#saveErr').textContent = 'เชื่อมต่อไม่ได้'; }
+  finally{ $('#saveBtn').disabled = false; }
+};
+$('#delBtn').onclick = async () => {
+  if(!confirm('ลบรายงานนี้ใช่หรือไม่')) return;
+  const j = await post({action:'delete', id:editId});
+  if(j.ok){ $('#dlg').close(); toast('ลบแล้ว'); load(); } else $('#saveErr').textContent = j.error||'ลบไม่สำเร็จ';
+};
+
+/* ===== พิมพ์: 1 รายงาน = 1 หน้า A4 ===== */
+function page(r){
+  const kv = (k,v) => `<div class="kv"><b>${k}</b><span>${esc(v)}</span></div>`;
+  const n = k => +r[k]||0;
+  return `<div class="pg">
+    <h2>รายงานผลการปฏิบัติการตั้งจุดสกัด</h2><div class="sub">${esc(r['หน่วย'])} &nbsp;ภ.จว.ปราจีนบุรี</div>
+    ${kv('วันที่', thDate(r['วันที่']))}${kv('เวลา', (r['เวลาเริ่ม']||'')+' – '+(r['เวลาสิ้นสุด']||'')+' น.')}
+    ${kv('จุดสกัด', r['ชื่อจุดสกัด'])}${kv('สถานที่', r['สถานที่'])}
+    ${kv('ผู้บังคับหน่วย', r['ผู้บังคับหน่วย'])}${kv('กำลังพล', n('กำลังพล')+' นาย')}
+    <table><tr><th>ตรวจบุคคล (คน)</th><th>ตรวจรถยนต์ (คัน)</th><th>ตรวจรถจักรยานยนต์ (คัน)</th><th>จับกุมคดีอาญา (ราย)</th></tr>
+    <tr><td class="n">${n('ตรวจบุคคล')}</td><td class="n">${n('ตรวจรถยนต์')}</td><td class="n">${n('ตรวจรถจักรยานยนต์')}</td><td class="n">${n('จับกุมคดีอาญา')}</td></tr></table>
+    ${kv('ยาเสพติด', r['ยาเสพติด'])}${kv('อาวุธปืน', r['อาวุธปืน'])}
+    <b>ผลการปฏิบัติ</b><div class="box">${esc(r['ผลการปฏิบัติ'])}</div>
+    <b>ปัญหา / อุปสรรค</b><div class="box">${esc(r['ปัญหา/อุปสรรค'])}</div>
+    <div class="sign">(ลงชื่อ) ${esc(r['ผู้รายงาน'])||'................................'}<br>ผู้รายงาน</div></div>`;
+}
+function printRows(rs){
+  if(!rs.length){ toast('ไม่มีรายงานให้พิมพ์'); return; }
+  $('#print').innerHTML = rs.map(page).join('');
+  window.print();
+}
+$('#printAllBtn').onclick = () => printRows(filtered());
+
+if(API_URL.startsWith('PUT_')) $('#loginErr').textContent = 'ยังไม่ได้ตั้งค่า API_URL ในไฟล์ index.html';
+const saved = sessionStorage.getItem('cpcode');
+if(saved && !API_URL.startsWith('PUT_')){ $('#code').value = saved; login(); }
+</script>
+</body>
+</html>
